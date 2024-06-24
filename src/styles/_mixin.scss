@@ -1,0 +1,6 @@
+@mixin logo {
+    color: $_white;
+    font-size: $_logo;
+    text-transform: uppercase;
+    font-weight: 600;
+}
