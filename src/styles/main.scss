@@ -2,6 +2,7 @@
 @import './mixin';
 @import './variables';
 @import './header.scss';
+@import './slider.scss';
 
 * {
     margin: 0;
@@ -21,7 +22,7 @@ html {
 
 .container {
     position: relative;
-    max-width: 1170px;
+    max-width: 1500px;
     padding: 0 15px;
     margin: auto;
     z-index: 2;
