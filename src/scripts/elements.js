@@ -1,4 +1,6 @@
-export function createHeader(root) {
+import {sliderObject} from './objects.js';
+
+export function makeHeader(root) {
     const header = createElements('header', 'header', null, null);
     root.append(header);
 
@@ -27,5 +29,46 @@ function createElements(tagName, className, text, type) {
         element.setAttribute('type', type)
     }
     return element;
+}
+
+function createItemsForSlider() {
+    let result = [];
+    for (let i = 1; i <= 5; i++) {
+        let item = document.createElement('div');
+        item.classList.add('swiper-slide');
+        let image = document.createElement('img');
+        image.setAttribute('src', sliderObject[i]);
+        image.setAttribute('alt', 'image');
+        image.setAttribute('id', 'slider-image');
+        item.append(image);
+        result.push(item);
+    }
+    return result;
+}
+
+export function makeSlider(root) {
+    const sectionSlider = createElements('section', 'section-slider', null, null);
+    root.append(sectionSlider);
+
+    const container = createElements('div', 'container', null, null);
+    sectionSlider.append(container);
+
+    const swiper = createElements('div', 'swiper', null, null);
+    swiper.classList.add('slider-wrap');
+    container.append(swiper);
+
+    const swiperWrap = createElements('div', 'swiper-wrapper', null, null);
+    swiper.append(swiperWrap);
+    
+    swiperWrap.append(...createItemsForSlider());
+
+    const pagination = createElements('div', 'swiper-pagination', null, null);
+    swiper.append(pagination);
+
+    const buttonPrev = createElements('div', 'swiper-button-prev', null, null);
+    swiper.append(buttonPrev);
+
+    const buttonNext = createElements('div', 'swiper-button-next', null, null);
+    swiper.append(buttonNext);
 }
 
