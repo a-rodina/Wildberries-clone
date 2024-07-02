@@ -4,3 +4,37 @@
     text-transform: uppercase;
     font-weight: 600;
 }
+
+@mixin price {
+    color: $_dark_violet;
+    font-weight: 700;
+    font-size: $_price;
+}
+
+@mixin old_price {
+    color: $_black;
+    font-weight: 600;
+    font-size: $_text;
+    text-decoration: line-through;
+}
+
+@mixin product_name {
+    color: $_black;
+    font-weight: 600;
+    font-size: $_text;
+    margin-bottom: 10px;
+}
+
+@mixin basket_button {
+    display: block;
+    width: 100%;
+    background-color: $_violet;
+    color: $_white;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 26px;
+    text-align: center;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+}
