@@ -1,8 +1,10 @@
+@import './cdn';
 @import './font';
 @import './mixin';
 @import './variables';
 @import './header.scss';
 @import './slider.scss';
+@import './product_cards.scss';
 
 * {
     margin: 0;
