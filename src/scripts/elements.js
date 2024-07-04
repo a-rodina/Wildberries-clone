@@ -15,6 +15,12 @@ export function makeHeader(root) {
     
     const search = createElements('input', 'header__search', null, 'text');
     search.setAttribute('placeholder', 'Найти на Wildberries');
+    
+    search.addEventListener('keyup', function() {
+        const newSearch = search.value;
+        findProductCard(newSearch);
+    })
+
     headerWrap.append(search);
 
     const basket = createElements('a', 'header__basket', null, null);
@@ -26,7 +32,6 @@ export function makeHeader(root) {
     basket.append(icon);
 }
 
-
 function createElements(tagName, className, text, type) {
     const element = document.createElement(tagName);
     element.innerHTML = text;
@@ -35,6 +40,19 @@ function createElements(tagName, className, text, type) {
         element.setAttribute('type', type)
     }
     return element;
+}
+
+function findProductCard(name) {
+    const cardsWrap = document.querySelector('#cards-wrap');
+    for (let child of cardsWrap.childNodes) {
+        const cardElement = child.childNodes[1].querySelector('.product-cards__product-name');
+        const cardName = cardElement.textContent.toLowerCase();
+        if (cardName.includes(name) == false) {
+            child.classList.add('product-card__inactive');
+        } else {
+            child.classList.remove('product-card__inactive');
+        }
+    }
 }
 
 function createItemsForSlider() {
@@ -90,6 +108,7 @@ export function makeSectionProductCards(root) {
     container.append(title);
 
     const cardsWrap = createElements('div', 'product-cards__wrap', null, null);
+    cardsWrap.setAttribute('id', 'cards-wrap')
     container.append(cardsWrap);
     getContentCards().then(response => arrayTransform(response, cardsWrap));
 }

@@ -18,6 +18,9 @@
     display: flex;
     flex-direction: column;
 }
+.product-card__inactive {
+    display: none;
+}
 .product-cards__first-bock {
     width: 100%;
     height: 250px;
