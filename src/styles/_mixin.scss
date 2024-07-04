@@ -12,7 +12,7 @@
 }
 
 @mixin old_price {
-    color: $_black;
+    color: $_grey;
     font-weight: 600;
     font-size: $_text;
     text-decoration: line-through;
@@ -23,6 +23,9 @@
     font-weight: 600;
     font-size: $_text;
     margin-bottom: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 @mixin basket_button {

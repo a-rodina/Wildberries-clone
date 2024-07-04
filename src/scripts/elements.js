@@ -7,17 +7,17 @@ export function makeHeader(root) {
     const container = createElements('div', 'container', null, null);
     header.append(container);
 
-    const headerWrap = createElements('div', 'header-wrap', null, null);
+    const headerWrap = createElements('div', 'header__wrap', null, null);
     container.append(headerWrap);
 
-    const logo = createElements('span', 'header-logo', 'wildberries', null);
+    const logo = createElements('span', 'header__logo', 'wildberries', null);
     headerWrap.append(logo);
     
-    const search = createElements('input', 'header-search', null, 'text');
+    const search = createElements('input', 'header__search', null, 'text');
     search.setAttribute('placeholder', 'Найти на Wildberries');
     headerWrap.append(search);
 
-    const basket = createElements('a', 'header-basket', null, null);
+    const basket = createElements('a', 'header__basket', null, null);
     basket.setAttribute('href', '#')
     headerWrap.append(basket);
 
@@ -86,10 +86,10 @@ export function makeSectionProductCards(root) {
     const container = createElements('div', 'container', null, null);
     sectionProductCards.append(container);
 
-    const title = createElements('h1', 'product-cards-title', 'Хиты продаж', null);
+    const title = createElements('h1', 'product-cards__title', 'Хиты продаж', null);
     container.append(title);
 
-    const cardsWrap = createElements('div', 'cards-wrap', null, null);
+    const cardsWrap = createElements('div', 'product-cards__wrap', null, null);
     container.append(cardsWrap);
     getContentCards().then(response => arrayTransform(response, cardsWrap));
 }
@@ -106,9 +106,9 @@ function arrayTransform(array, cardsWrap) {
 function createProductCards(objects) {
     let result = [];
     for (let i = 0; i < objects.length; i++) {
-        let card = createElements('div', 'card', null, null);
+        let card = createElements('div', 'product-card', null, null);
 
-        let firstCardBlock = createElements('div', 'first-card-bock', null, null);
+        let firstCardBlock = createElements('div', 'product-cards__first-bock', null, null);
         card.append(firstCardBlock);
 
         function getRandomInt(min, max) {
@@ -126,23 +126,26 @@ function createProductCards(objects) {
         image.setAttribute('id', 'card-image');
         firstCardBlock.append(image);
 
-        let secondCardBlock = createElements('div', 'second-card-bock', null, null);
+        let discount = createElements('p', 'product-cards__discount', '-10%', null);
+        firstCardBlock.append(discount);
+
+        let secondCardBlock = createElements('div', 'product-cards__second-bock', null, null);
         card.append(secondCardBlock);
 
-        let priceCardBlock = createElements('div', 'price-card-bock', null, null);
+        let priceCardBlock = createElements('div', 'product-cards__price-block', null, null);
         secondCardBlock.append(priceCardBlock);
 
-        let price = createElements('p', 'price-card', objects[i].price, null);
+        let price = createElements('p', 'product-cards__price', objects[i].price, null);
 
         priceCardBlock.append(price);
         
-        let oldPrice = createElements('p', 'old-price-card', '1000 р', null);
+        let oldPrice = createElements('p', 'product-cards__old-price', '1000 р', null);
         priceCardBlock.append(oldPrice);
 
-        let productName = createElements('h2', 'product-name', objects[i].title, null);
+        let productName = createElements('h2', 'product-cards__product-name', objects[i].title, null);
         secondCardBlock.append(productName);
 
-        let buttonBasket = createElements('button', 'basket-button', 'В корзину', 'button');
+        let buttonBasket = createElements('button', 'product-cards__basket', 'В корзину', 'button');
         card.append(buttonBasket);
 
         result.push(card);
