@@ -74,6 +74,6 @@
 .product-cards__product-name {
     @include product_name;
 }
-.product-cards__basket {
-    @include basket_button;
+.product-cards__cart {
+    @include cart_button;
 }

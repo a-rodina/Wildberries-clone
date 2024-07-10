@@ -17,19 +17,24 @@ export function makeHeader(root) {
     search.setAttribute('placeholder', 'Найти на Wildberries');
     
     search.addEventListener('keyup', function() {
-        const newSearch = search.value;
+        const newSearch = search.value.toLowerCase();
         findProductCard(newSearch);
-    })
+    });
 
     headerWrap.append(search);
 
-    const basket = createElements('a', 'header__basket', null, null);
-    basket.setAttribute('href', '#')
-    headerWrap.append(basket);
+    const cart = createElements('a', 'header__cart', null, null);
+    cart.setAttribute('href', '#');
+    headerWrap.append(cart);
+
+    cart.addEventListener("click", function() {
+        let sectionCart = document.querySelector('.cart');
+        sectionCart.classList.toggle("cart-active");
+    })
 
     const icon = createElements('i', 'fa-solid', null, null);
     icon.classList.add('fa-cart-shopping');
-    basket.append(icon);
+    cart.append(icon);
 }
 
 function createElements(tagName, className, text, type) {
@@ -164,10 +169,97 @@ function createProductCards(objects) {
         let productName = createElements('h2', 'product-cards__product-name', objects[i].title, null);
         secondCardBlock.append(productName);
 
-        let buttonBasket = createElements('button', 'product-cards__basket', 'В корзину', 'button');
-        card.append(buttonBasket);
+        let buttonCart = createElements('button', 'product-cards__cart', 'В корзину', 'button');
+        card.append(buttonCart);
+
+        buttonCart.addEventListener('click', function() {
+            addProductInCart(objects[i]);
+        });
 
         result.push(card);
     }
     return result;
+}
+
+export function createCart(root) {
+    const sectionCart = createElements('section', 'cart', null, null);
+    root.append(sectionCart);
+
+    const container = createElements('div', 'container', null, null);
+    sectionCart.append(container);
+
+    const cartWrap = createElements('div', 'cart__wrap', null, null);
+    sectionCart.append(cartWrap);
+
+    const cartHeader = createElements('div', 'cart__header', null, null);
+    cartWrap.append(cartHeader);
+    
+    const cartTitle = createElements('h2', 'cart__header-title', 'Корзина', null);
+    cartHeader.append(cartTitle);
+
+    const cartClear = createElements('button', 'cart__header-button', 'Очистить корзину', null);
+    cartClear.addEventListener('click', function() {
+        let delChild = cartProducts.lastChild;
+        while (delChild) {
+            delChild.remove();
+            delChild = cartProducts.lastChild;
+        }
+        countCart(cartProducts);
+    })
+
+    cartHeader.append(cartClear);
+
+    const cartProducts = createElements('div', 'cart__products', null, null);
+    cartProducts.setAttribute('id', 'block-cart-product');
+    cartWrap.append(cartProducts);
+
+    const cartTotal = createElements('div', 'cart__total', null, null);
+    cartWrap.append(cartTotal);
+
+    const cartTotalText = createElements('div', 'cart__total-text', 'Итого: 0.00', null);
+    cartTotal.append(cartTotalText);
+}
+
+function addProductInCart(object) {
+    let cartProducts = document.querySelector('#block-cart-product');
+
+    let isExistingProduct = false;
+
+    for (let product of cartProducts.childNodes) {
+        
+        if (product.id == object.id) {
+            product.count += 1;
+            isExistingProduct = true;
+            product.childNodes[0].innerHTML = product.name + ' x' + product.count;
+            product.childNodes[1].innerHTML = (product.price * product.count).toFixed(2);
+        }
+    }
+    if (!isExistingProduct) {
+        const product = createElements('div', 'cart__product-item', null, null);
+
+        product.id = object.id;
+        product.price = object.price;
+        product.name = object.title;
+        product.count = 1;
+        cartProducts.append(product);
+        
+        const cartProductName = createElements('p', 'cart__product-name', product.name + ' x' + product.count, null);
+        product.append(cartProductName);
+
+        const cartProductPrice = createElements('p', 'cart__product-price', object.price, null);
+        product.append(cartProductPrice);
+    }
+
+    countCart(cartProducts);
+}
+
+function countCart(cartProducts) {
+    let totalAmount = 0;
+
+    for (let product of cartProducts.childNodes) {
+        totalAmount += product.count * product.price;
+    }
+    
+    let cartTotalText = document.querySelector('.cart__total-text');
+    cartTotalText.innerHTML = 'Итого: ' + totalAmount.toFixed(2);
 }

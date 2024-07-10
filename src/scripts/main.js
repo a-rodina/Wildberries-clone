@@ -1,11 +1,12 @@
 'use strict'
 const root = document.querySelector('#root');
 
-import {makeHeader, makeSlider, makeSectionProductCards} from './elements.js';
+import {makeHeader, makeSlider, makeSectionProductCards, createCart} from './elements.js';
 
 makeHeader(root);
 makeSlider(root);
 makeSectionProductCards(root);
+createCart(root);
 
 new Swiper('.slider-wrap', {
     navigation: {
@@ -16,6 +17,5 @@ new Swiper('.slider-wrap', {
         el: '.swiper-pagination',
         clickable: true
     },
-    
 });
 
