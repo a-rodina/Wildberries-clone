@@ -141,8 +141,8 @@ function createProductCards(objects) {
             return Math.floor(Math.random() * (max - min) + min);
         }
         
-        let randomNumber = getRandomInt(1, 200) 
-        let randomImage = `${objects[i].pictures}?random=${randomNumber}`
+        let randomNumber = getRandomInt(1, 300);
+        let randomImage = `${objects[i].pictures}?random=${randomNumber}`;
 
         let image = document.createElement('img');
         image.setAttribute('src', randomImage);
@@ -150,7 +150,8 @@ function createProductCards(objects) {
         image.setAttribute('id', 'card-image');
         firstCardBlock.append(image);
 
-        let discount = createElements('p', 'product-cards__discount', '-10%', null);
+        let randomDiscount = getRandomInt(1, 100);
+        let discount = createElements('p', 'product-cards__discount', `${randomDiscount}%`, null);
         firstCardBlock.append(discount);
 
         let secondCardBlock = createElements('div', 'product-cards__second-bock', null, null);
@@ -159,11 +160,12 @@ function createProductCards(objects) {
         let priceCardBlock = createElements('div', 'product-cards__price-block', null, null);
         secondCardBlock.append(priceCardBlock);
 
-        let price = createElements('p', 'product-cards__price', objects[i].price, null);
+        let culcPrice = (objects[i].price * (100 - randomDiscount)) / 100;
+        let price = createElements('p', 'product-cards__price', culcPrice.toFixed(2), null);
 
         priceCardBlock.append(price);
         
-        let oldPrice = createElements('p', 'product-cards__old-price', '1000 р', null);
+        let oldPrice = createElements('p', 'product-cards__old-price', objects[i].price, null);
         priceCardBlock.append(oldPrice);
 
         let productName = createElements('h2', 'product-cards__product-name', objects[i].title, null);
