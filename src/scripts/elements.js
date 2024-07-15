@@ -1,4 +1,5 @@
 import {sliderObject} from './objects.js';
+import {addItem, deleteAll, getItem} from './storage.js';
 
 export function makeHeader(root) {
     const header = createElements('header', 'header', null, null);
@@ -102,7 +103,6 @@ export function makeSlider(root) {
 }
 
 export function makeSectionProductCards(root) {
-    
     const sectionProductCards = createElements('section', 'product-cards', null, null);
     root.append(sectionProductCards);
 
@@ -160,12 +160,11 @@ function createProductCards(objects) {
         let priceCardBlock = createElements('div', 'product-cards__price-block', null, null);
         secondCardBlock.append(priceCardBlock);
 
-        let culcPrice = (objects[i].price * (100 - randomDiscount)) / 100;
-        let price = createElements('p', 'product-cards__price', culcPrice.toFixed(2), null);
-
+        let price = createElements('p', 'product-cards__price', objects[i].price, null);
         priceCardBlock.append(price);
         
-        let oldPrice = createElements('p', 'product-cards__old-price', objects[i].price, null);
+        let culcPrice = (objects[i].price * 100) / (100 - randomDiscount);
+        let oldPrice = createElements('p', 'product-cards__old-price', culcPrice.toFixed(2), null);
         priceCardBlock.append(oldPrice);
 
         let productName = createElements('h2', 'product-cards__product-name', objects[i].title, null);
@@ -176,6 +175,7 @@ function createProductCards(objects) {
 
         buttonCart.addEventListener('click', function() {
             addProductInCart(objects[i]);
+            addItem(objects[i]);
         });
 
         result.push(card);
@@ -207,11 +207,12 @@ export function createCart(root) {
             delChild = cartProducts.lastChild;
         }
         countCart(cartProducts);
+        deleteAll();
     })
 
     cartHeader.append(cartClear);
 
-    const cartProducts = createElements('div', 'cart__products', null, null);
+    let cartProducts = createElements('div', 'cart__products', null, null);
     cartProducts.setAttribute('id', 'block-cart-product');
     cartWrap.append(cartProducts);
 
@@ -220,6 +221,15 @@ export function createCart(root) {
 
     const cartTotalText = createElements('div', 'cart__total-text', 'Итого: 0.00', null);
     cartTotal.append(cartTotalText);
+
+    makeCartProducts();
+}
+
+function makeCartProducts() {    
+    let arrayCartWrap = getItem();
+    for (let i = 0; i < arrayCartWrap.length; i++) {
+        addProductInCart(arrayCartWrap[i]);
+    }
 }
 
 function addProductInCart(object) {
