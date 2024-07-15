@@ -28,13 +28,13 @@
     overflow: hidden;
 }
 
-@mixin basket_button {
+@mixin cart_button {
     display: block;
     width: 100%;
     background-color: $_violet;
     color: $_white;
     font-weight: 600;
-    font-size: 15px;
+    font-size: $_text;
     padding: 10px 26px;
     text-align: center;
     border: none;

@@ -1,4 +1,5 @@
 import {sliderObject} from './objects.js';
+import {addItem, deleteAll, getItem} from './storage.js';
 
 export function makeHeader(root) {
     const header = createElements('header', 'header', null, null);
@@ -15,17 +16,27 @@ export function makeHeader(root) {
     
     const search = createElements('input', 'header__search', null, 'text');
     search.setAttribute('placeholder', 'Найти на Wildberries');
+    
+    search.addEventListener('keyup', function() {
+        const newSearch = search.value.toLowerCase();
+        findProductCard(newSearch);
+    });
+
     headerWrap.append(search);
 
-    const basket = createElements('a', 'header__basket', null, null);
-    basket.setAttribute('href', '#')
-    headerWrap.append(basket);
+    const cart = createElements('a', 'header__cart', null, null);
+    cart.setAttribute('href', '#');
+    headerWrap.append(cart);
+
+    cart.addEventListener("click", function() {
+        let sectionCart = document.querySelector('.cart');
+        sectionCart.classList.toggle("cart-active");
+    })
 
     const icon = createElements('i', 'fa-solid', null, null);
     icon.classList.add('fa-cart-shopping');
-    basket.append(icon);
+    cart.append(icon);
 }
-
 
 function createElements(tagName, className, text, type) {
     const element = document.createElement(tagName);
@@ -35,6 +46,19 @@ function createElements(tagName, className, text, type) {
         element.setAttribute('type', type)
     }
     return element;
+}
+
+function findProductCard(name) {
+    const cardsWrap = document.querySelector('#cards-wrap');
+    for (let child of cardsWrap.childNodes) {
+        const cardElement = child.childNodes[1].querySelector('.product-cards__product-name');
+        const cardName = cardElement.textContent.toLowerCase();
+        if (cardName.includes(name) == false) {
+            child.classList.add('product-card__inactive');
+        } else {
+            child.classList.remove('product-card__inactive');
+        }
+    }
 }
 
 function createItemsForSlider() {
@@ -79,7 +103,6 @@ export function makeSlider(root) {
 }
 
 export function makeSectionProductCards(root) {
-    
     const sectionProductCards = createElements('section', 'product-cards', null, null);
     root.append(sectionProductCards);
 
@@ -90,6 +113,7 @@ export function makeSectionProductCards(root) {
     container.append(title);
 
     const cardsWrap = createElements('div', 'product-cards__wrap', null, null);
+    cardsWrap.setAttribute('id', 'cards-wrap')
     container.append(cardsWrap);
     getContentCards().then(response => arrayTransform(response, cardsWrap));
 }
@@ -117,8 +141,8 @@ function createProductCards(objects) {
             return Math.floor(Math.random() * (max - min) + min);
         }
         
-        let randomNumber = getRandomInt(1, 200) 
-        let randomImage = `${objects[i].pictures}?random=${randomNumber}`
+        let randomNumber = getRandomInt(1, 300);
+        let randomImage = `${objects[i].pictures}?random=${randomNumber}`;
 
         let image = document.createElement('img');
         image.setAttribute('src', randomImage);
@@ -126,7 +150,8 @@ function createProductCards(objects) {
         image.setAttribute('id', 'card-image');
         firstCardBlock.append(image);
 
-        let discount = createElements('p', 'product-cards__discount', '-10%', null);
+        let randomDiscount = getRandomInt(1, 100);
+        let discount = createElements('p', 'product-cards__discount', `${randomDiscount}%`, null);
         firstCardBlock.append(discount);
 
         let secondCardBlock = createElements('div', 'product-cards__second-bock', null, null);
@@ -136,19 +161,117 @@ function createProductCards(objects) {
         secondCardBlock.append(priceCardBlock);
 
         let price = createElements('p', 'product-cards__price', objects[i].price, null);
-
         priceCardBlock.append(price);
         
-        let oldPrice = createElements('p', 'product-cards__old-price', '1000 р', null);
+        let culcPrice = (objects[i].price * 100) / (100 - randomDiscount);
+        let oldPrice = createElements('p', 'product-cards__old-price', culcPrice.toFixed(2), null);
         priceCardBlock.append(oldPrice);
 
         let productName = createElements('h2', 'product-cards__product-name', objects[i].title, null);
         secondCardBlock.append(productName);
 
-        let buttonBasket = createElements('button', 'product-cards__basket', 'В корзину', 'button');
-        card.append(buttonBasket);
+        let buttonCart = createElements('button', 'product-cards__cart', 'В корзину', 'button');
+        card.append(buttonCart);
+
+        buttonCart.addEventListener('click', function() {
+            addProductInCart(objects[i]);
+            addItem(objects[i]);
+        });
 
         result.push(card);
     }
     return result;
+}
+
+export function createCart(root) {
+    const sectionCart = createElements('section', 'cart', null, null);
+    root.append(sectionCart);
+
+    const container = createElements('div', 'container', null, null);
+    sectionCart.append(container);
+
+    const cartWrap = createElements('div', 'cart__wrap', null, null);
+    sectionCart.append(cartWrap);
+
+    const cartHeader = createElements('div', 'cart__header', null, null);
+    cartWrap.append(cartHeader);
+    
+    const cartTitle = createElements('h2', 'cart__header-title', 'Корзина', null);
+    cartHeader.append(cartTitle);
+
+    const cartClear = createElements('button', 'cart__header-button', 'Очистить корзину', null);
+    cartClear.addEventListener('click', function() {
+        let delChild = cartProducts.lastChild;
+        while (delChild) {
+            delChild.remove();
+            delChild = cartProducts.lastChild;
+        }
+        countCart(cartProducts);
+        deleteAll();
+    })
+
+    cartHeader.append(cartClear);
+
+    let cartProducts = createElements('div', 'cart__products', null, null);
+    cartProducts.setAttribute('id', 'block-cart-product');
+    cartWrap.append(cartProducts);
+
+    const cartTotal = createElements('div', 'cart__total', null, null);
+    cartWrap.append(cartTotal);
+
+    const cartTotalText = createElements('div', 'cart__total-text', 'Итого: 0.00', null);
+    cartTotal.append(cartTotalText);
+
+    makeCartProducts();
+}
+
+function makeCartProducts() {    
+    let arrayCartWrap = getItem();
+    for (let i = 0; i < arrayCartWrap.length; i++) {
+        addProductInCart(arrayCartWrap[i]);
+    }
+}
+
+function addProductInCart(object) {
+    let cartProducts = document.querySelector('#block-cart-product');
+
+    let isExistingProduct = false;
+
+    for (let product of cartProducts.childNodes) {
+        
+        if (product.id == object.id) {
+            product.count += 1;
+            isExistingProduct = true;
+            product.childNodes[0].innerHTML = product.name + ' x' + product.count;
+            product.childNodes[1].innerHTML = (product.price * product.count).toFixed(2);
+        }
+    }
+    if (!isExistingProduct) {
+        const product = createElements('div', 'cart__product-item', null, null);
+
+        product.id = object.id;
+        product.price = object.price;
+        product.name = object.title;
+        product.count = 1;
+        cartProducts.append(product);
+        
+        const cartProductName = createElements('p', 'cart__product-name', product.name + ' x' + product.count, null);
+        product.append(cartProductName);
+
+        const cartProductPrice = createElements('p', 'cart__product-price', object.price, null);
+        product.append(cartProductPrice);
+    }
+
+    countCart(cartProducts);
+}
+
+function countCart(cartProducts) {
+    let totalAmount = 0;
+
+    for (let product of cartProducts.childNodes) {
+        totalAmount += product.count * product.price;
+    }
+    
+    let cartTotalText = document.querySelector('.cart__total-text');
+    cartTotalText.innerHTML = 'Итого: ' + totalAmount.toFixed(2);
 }
