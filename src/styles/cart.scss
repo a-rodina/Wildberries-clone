@@ -1,14 +1,7 @@
 .cart {
     display: none;
-    padding: 10px 0;
-    background-color: $_violet_background;
-    height: 100vh;
-    z-index: 10;
-    position: fixed;
-    top: 95;
-    right: 0;
-    left: 0;
 }
+
 .cart-active {
     display: block;
     padding: 10px 0;
@@ -19,7 +12,15 @@
     top: 95;
     right: 0;
     left: 0;
+
+    @media (max-width: 1200px) {
+        top: 90;
+    }
+    @media (max-width: 320px) {
+        top: 70;;
+    }
 }
+
 .cart__wrap {
     background-color: $_white;
     margin: auto;
@@ -29,7 +30,15 @@
     width: 700px;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 836px) {
+        width: 500px;
+    }
+    @media (max-width: 550px) {
+        width: 300px;
+    }
 }
+
 .cart__header {
     width: 90%;
     margin: auto;
@@ -37,10 +46,16 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .cart__header-title {
     color: $_black;
     font-size: $_cart_title;
+
+    @media (max-width: 550px) {
+        font-size: $_price;
+    }
 }
+
 .cart__header-button {
     width: 100px;
     background-color: $_dark_violet;
@@ -52,35 +67,64 @@
     border: none;
     border-radius: 15px;
     cursor: pointer;
+
+    @media (max-width: 550px) {
+        font-size: $_mini_button;
+        width: 90px;
+        padding: 3px 0;
+    }
 }
+
 .cart__products {
     width: 90%;
     margin: 10px auto 10px;
 }
+
 .cart__product-item{
     display: flex;
     justify-content: space-between;
+
+    @media (max-width: 550px) {
+        margin-bottom: 10px;
+    }
 }
+
 .cart__product-name {
     display: block;
     color: $_black;
     font-size: $_cart_text;
     font-weight: 500;
+
+    @media (max-width: 550px) {
+        font-size: $_text;
+        width: 50%;
+    }
 }
+
 .cart__product-price {
     display: block;
     color: $_dark_violet;
     font-weight: 700;
     font-size: $_cart_text;
+
+    @media (max-width: 550px) {
+        font-size: $_text;
+    }
 }
+
 .cart__total {
     width: 95%;
     display: flex;
     justify-content: end;
-}
-.cart__total-text {
-    display: block;
-    color: $_black;
-    font-weight: 700;
-    font-size: $_price;
+    
+    span {
+        display: block;
+        color: $_black;
+        font-weight: 700;
+        font-size: $_price;
+
+        @media (max-width: 550px) {
+            font-size: $_cart_text;
+        }
+    }
 }

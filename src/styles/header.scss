@@ -4,7 +4,12 @@ header {
     position: sticky;
     top: 0;
     z-index: 3;
+
+    @media (max-width: 320px) {
+        padding: 10px 0;
+    }
 }
+
 .header__wrap {
     display: flex;
     justify-content: space-between;
@@ -15,6 +20,13 @@ header {
     @include logo;
     display: block;
     margin: 0 15px;
+
+    @media (max-width: 1200px) {
+        font-size: $_cart_title;
+    }
+    @media (max-width: 1024px) {
+        display: none;
+    }
 }
 
 .header__search {
@@ -26,10 +38,23 @@ header {
     border: none;
     outline: none;
     text-align: center;
-    font-size: 20px;
+    font-size: $_price;
     font-weight: 300;
     color: $_black;
+
+    @media (max-width: 1200px) {
+        width: 70%;
+        font-size: $_cart_text;
+    }
+    @media (max-width: 1024px) {
+        width: 90%;
+        line-height: 40px;
+    }
+    @media (max-width: 320px) {
+        font-size: $_text;
+    }
 }
+
 .header__cart {
     position: relative;
     width: 100px;

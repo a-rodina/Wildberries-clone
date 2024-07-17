@@ -1,5 +1,5 @@
 import {sliderObject} from './objects.js';
-import {addItem, deleteAll, getItem} from './storage.js';
+import * as Storage from './storage.js';
 
 export function makeHeader(root) {
     const header = createElements('header', 'header', null, null);
@@ -36,44 +36,6 @@ export function makeHeader(root) {
     const icon = createElements('i', 'fa-solid', null, null);
     icon.classList.add('fa-cart-shopping');
     cart.append(icon);
-}
-
-function createElements(tagName, className, text, type) {
-    const element = document.createElement(tagName);
-    element.innerHTML = text;
-    element.classList.add(className);
-    if (type !== null) {
-        element.setAttribute('type', type)
-    }
-    return element;
-}
-
-function findProductCard(name) {
-    const cardsWrap = document.querySelector('#cards-wrap');
-    for (let child of cardsWrap.childNodes) {
-        const cardElement = child.childNodes[1].querySelector('.product-cards__product-name');
-        const cardName = cardElement.textContent.toLowerCase();
-        if (cardName.includes(name) == false) {
-            child.classList.add('product-card__inactive');
-        } else {
-            child.classList.remove('product-card__inactive');
-        }
-    }
-}
-
-function createItemsForSlider() {
-    let result = [];
-    for (let i = 1; i <= 5; i++) {
-        let item = document.createElement('div');
-        item.classList.add('swiper-slide');
-        let image = document.createElement('img');
-        image.setAttribute('src', sliderObject[i]);
-        image.setAttribute('alt', 'image');
-        image.setAttribute('id', 'slider-image');
-        item.append(image);
-        result.push(item);
-    }
-    return result;
 }
 
 export function makeSlider(root) {
@@ -118,6 +80,86 @@ export function makeSectionProductCards(root) {
     getContentCards().then(response => arrayTransform(response, cardsWrap));
 }
 
+export function createCart(root) {
+    const sectionCart = createElements('section', 'cart', null, null);
+    root.append(sectionCart);
+
+    const container = createElements('div', 'container', null, null);
+    sectionCart.append(container);
+
+    const cartWrap = createElements('div', 'cart__wrap', null, null);
+    sectionCart.append(cartWrap);
+
+    const cartHeader = createElements('div', 'cart__header', null, null);
+    cartWrap.append(cartHeader);
+    
+    const cartTitle = createElements('h2', 'cart__header-title', 'Корзина', null);
+    cartHeader.append(cartTitle);
+
+    const cartClear = createElements('button', 'cart__header-button', 'Очистить корзину', null);
+    cartClear.addEventListener('click', function() {
+        let delChild = cartProducts.lastChild;
+        while (delChild) {
+            delChild.remove();
+            delChild = cartProducts.lastChild;
+        }
+        countCart(cartProducts);
+        Storage.deleteAll();
+    })
+
+    cartHeader.append(cartClear);
+
+    let cartProducts = createElements('div', 'cart__products', null, null);
+    cartProducts.setAttribute('id', 'block-cart-product');
+    cartWrap.append(cartProducts);
+
+    const cartTotal = createElements('div', 'cart__total', null, null);
+    cartWrap.append(cartTotal);
+
+    const cartTotalText = createElements('span', 'cart__total-text', 'Итого: 0.00', null);
+    cartTotal.append(cartTotalText);
+
+    makeCartProducts();
+}
+
+function createElements(tagName, className, text, type) {
+    const element = document.createElement(tagName);
+    element.innerHTML = text;
+    element.classList.add(className);
+    if (type !== null) {
+        element.setAttribute('type', type)
+    }
+    return element;
+}
+
+function findProductCard(name) {
+    const cardsWrap = document.querySelector('#cards-wrap');
+    for (let child of cardsWrap.childNodes) {
+        const cardElement = child.childNodes[1].querySelector('.product-cards__product-name');
+        const cardName = cardElement.textContent.toLowerCase();
+        if (cardName.includes(name) == false) {
+            child.classList.add('product-card__inactive');
+        } else {
+            child.classList.remove('product-card__inactive');
+        }
+    }
+}
+
+function createItemsForSlider() {
+    let result = [];
+    for (let i = 1; i <= 5; i++) {
+        let item = document.createElement('div');
+        item.classList.add('swiper-slide');
+        let image = document.createElement('img');
+        image.setAttribute('src', sliderObject[i]);
+        image.setAttribute('alt', 'image');
+        image.setAttribute('id', 'slider-image');
+        item.append(image);
+        result.push(item);
+    }
+    return result;
+}
+
 async function getContentCards() {
     let response = await fetch('https://6683ed6956e7503d1adeb3f7.mockapi.io/Wildberries');
     return response.json();
@@ -141,7 +183,7 @@ function createProductCards(objects) {
             return Math.floor(Math.random() * (max - min) + min);
         }
         
-        let randomNumber = getRandomInt(1, 300);
+        let randomNumber = getRandomInt(1, 400);
         let randomImage = `${objects[i].pictures}?random=${randomNumber}`;
 
         let image = document.createElement('img');
@@ -175,7 +217,7 @@ function createProductCards(objects) {
 
         buttonCart.addEventListener('click', function() {
             addProductInCart(objects[i]);
-            addItem(objects[i]);
+            Storage.addItem(objects[i]);
         });
 
         result.push(card);
@@ -183,50 +225,8 @@ function createProductCards(objects) {
     return result;
 }
 
-export function createCart(root) {
-    const sectionCart = createElements('section', 'cart', null, null);
-    root.append(sectionCart);
-
-    const container = createElements('div', 'container', null, null);
-    sectionCart.append(container);
-
-    const cartWrap = createElements('div', 'cart__wrap', null, null);
-    sectionCart.append(cartWrap);
-
-    const cartHeader = createElements('div', 'cart__header', null, null);
-    cartWrap.append(cartHeader);
-    
-    const cartTitle = createElements('h2', 'cart__header-title', 'Корзина', null);
-    cartHeader.append(cartTitle);
-
-    const cartClear = createElements('button', 'cart__header-button', 'Очистить корзину', null);
-    cartClear.addEventListener('click', function() {
-        let delChild = cartProducts.lastChild;
-        while (delChild) {
-            delChild.remove();
-            delChild = cartProducts.lastChild;
-        }
-        countCart(cartProducts);
-        deleteAll();
-    })
-
-    cartHeader.append(cartClear);
-
-    let cartProducts = createElements('div', 'cart__products', null, null);
-    cartProducts.setAttribute('id', 'block-cart-product');
-    cartWrap.append(cartProducts);
-
-    const cartTotal = createElements('div', 'cart__total', null, null);
-    cartWrap.append(cartTotal);
-
-    const cartTotalText = createElements('div', 'cart__total-text', 'Итого: 0.00', null);
-    cartTotal.append(cartTotalText);
-
-    makeCartProducts();
-}
-
 function makeCartProducts() {    
-    let arrayCartWrap = getItem();
+    let arrayCartWrap = Storage.getItem();
     for (let i = 0; i < arrayCartWrap.length; i++) {
         addProductInCart(arrayCartWrap[i]);
     }

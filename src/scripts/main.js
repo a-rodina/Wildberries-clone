@@ -1,12 +1,12 @@
 'use strict'
 const root = document.querySelector('#root');
 
-import {makeHeader, makeSlider, makeSectionProductCards, createCart} from './elements.js';
+import * as UI from './elements.js';
 
-makeHeader(root);
-makeSlider(root);
-makeSectionProductCards(root);
-createCart(root);
+UI.makeHeader(root);
+UI.makeSlider(root);
+UI.makeSectionProductCards(root);
+UI.createCart(root);
 
 new Swiper('.slider-wrap', {
     navigation: {
@@ -17,5 +17,9 @@ new Swiper('.slider-wrap', {
         el: '.swiper-pagination',
         clickable: true
     },
+    loop: true,
+    autoplay: {
+        delay: 4000
+    }
 });
 

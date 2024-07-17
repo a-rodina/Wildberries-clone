@@ -2,9 +2,10 @@
 $_white: #FFFFFF;
 $_black: #000;
 $_grey: #858585;
-$_light_violet: #df34d2;
+$_light_violet: rgb(223, 52, 210);
 $_violet: #bf22e1;
 $_violet_background: rgba(191, 34, 225, 0.6);
+$_light_violet_shadow: rgba(241, 147, 234, 0.856);
 $_dark_violet: #8306f7;
 $_red: #f84e4e;
 
@@ -15,5 +16,6 @@ $_text: 15px;
 $_cart_title: 25px;
 $_cart_text: 18px;
 $_price: 20px;
+$_mini_button: 13px;
 
 
