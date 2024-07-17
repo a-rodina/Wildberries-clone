@@ -1,6 +1,7 @@
 'use strict'
 const root = document.querySelector('#root');
 
+import { Autoplay } from 'swiper/modules';
 import {makeHeader, makeSlider, makeSectionProductCards, createCart} from './elements.js';
 
 makeHeader(root);
@@ -17,5 +18,9 @@ new Swiper('.slider-wrap', {
         el: '.swiper-pagination',
         clickable: true
     },
+    loop: true,
+    autoplay: {
+        delay: 4000
+    }
 });
 

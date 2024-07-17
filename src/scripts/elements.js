@@ -219,7 +219,7 @@ export function createCart(root) {
     const cartTotal = createElements('div', 'cart__total', null, null);
     cartWrap.append(cartTotal);
 
-    const cartTotalText = createElements('div', 'cart__total-text', 'Итого: 0.00', null);
+    const cartTotalText = createElements('span', 'cart__total-text', 'Итого: 0.00', null);
     cartTotal.append(cartTotalText);
 
     makeCartProducts();
