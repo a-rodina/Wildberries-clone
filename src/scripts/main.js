@@ -1,13 +1,12 @@
 'use strict'
 const root = document.querySelector('#root');
 
-import { Autoplay } from 'swiper/modules';
-import {makeHeader, makeSlider, makeSectionProductCards, createCart} from './elements.js';
+import * as UI from './elements.js';
 
-makeHeader(root);
-makeSlider(root);
-makeSectionProductCards(root);
-createCart(root);
+UI.makeHeader(root);
+UI.makeSlider(root);
+UI.makeSectionProductCards(root);
+UI.createCart(root);
 
 new Swiper('.slider-wrap', {
     navigation: {
