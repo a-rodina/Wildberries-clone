@@ -5,8 +5,13 @@
 ## Установка: 
 
 1. Клонивароние репозитория
-     git clone https://github.com/a-rodina/Wildberries-clone.git
+   
+     `git clone https://github.com/a-rodina/Wildberries-clone.git`
+   
 2. Установка пакета npm
-     npm install
+
+     `npm install`
+   
 3. Запуск проекта
-     npm run start
+ 
+     `npm run start`
